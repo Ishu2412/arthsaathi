@@ -5,6 +5,10 @@ const meetingSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  description: {
+    type: String,
+    required: true,
+  },
   participants: {
     type: [String],
     default: [],
