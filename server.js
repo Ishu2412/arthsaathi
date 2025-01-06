@@ -6,6 +6,7 @@ import env from "dotenv";
 
 import __dirname from "./utils/path.js";
 import authRoutes from "./routes/authentication.js";
+import userRoutes from "./routes/user.js";
 
 const app = express();
 env.config();
@@ -17,6 +18,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use(authRoutes);
+app.use(userRoutes);
 
 mongoose
   .connect(
