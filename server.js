@@ -6,7 +6,7 @@ import env from "dotenv";
 
 import __dirname from "./utils/path.js";
 import authRoutes from "./routes/authentication.js";
-import userRoutes from "./routes/user.js";
+import userRoutes from "./routes/profile.js";
 
 const app = express();
 env.config();
