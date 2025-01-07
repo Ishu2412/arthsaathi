@@ -14,7 +14,7 @@ env.config();
 
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+app.use(cors({origin: "*"}));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
