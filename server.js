@@ -14,7 +14,13 @@ env.config();
 
 const PORT = process.env.PORT || 5000;
 
-app.use(cors({origin: "*"}));
+app.use(cors({
+    origin: [
+      "http://localhost:5173",
+      "https://localhost:5173"
+    ],
+    optionsSuccessStatus: 200,
+  }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
