@@ -12,7 +12,7 @@ import meetingAssistRoutes from "./routes/meetassist.js";
 const app = express();
 env.config();
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 app.use(cors({
     origin: [

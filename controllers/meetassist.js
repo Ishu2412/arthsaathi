@@ -1,5 +1,5 @@
-import { llmGenerator } from "../utils/llm.js";
 import { Meeting } from "../models/meeting.js";
+import { llmGenerator } from "../utils/llm.js";
 
 export const createMeeting = async (req, res) => {
   try {

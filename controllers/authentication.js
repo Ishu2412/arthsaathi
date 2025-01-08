@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
+import { OTPStore } from "../models/otp.js";
 import { User } from "../models/user.js";
 import { sendEmail } from "../utils/mail.js";
-import { OTPStore } from "../models/otp.js";
 
 const saltRounds = 10;
 
