@@ -26,7 +26,7 @@ export async function generateTutorial(req, res) {
     const { email, level } = req.body;
 
     const tutorial = await llmGenerator(
-      `Create a full financial course in plain text, formatted as complete sentences. Do not use special characters like newline (\n), asterisks (*), dashes (-), or any list-style formatting. Write everything in continuous paragraphs with proper spacing. Each chapter name should be like "Chapter X: [Title]" `
+      `Provide the name of chapters of financial course in plain text without using spacial characters like \n, *, - for ${level} level. Do not add next line character.`
     );
     res.status(200).json(tutorial);
   } catch (error) {
