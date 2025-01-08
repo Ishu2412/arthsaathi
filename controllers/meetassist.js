@@ -36,7 +36,9 @@ export const getSummary = async (req, res) => {
     }
     meeting.content = content;
     await meeting.save();
-    const summary = await llmGenerator(content);
+    const summary = await llmGenerator(
+      `A two line summary of the meeting in plain text without using spacial characters. Here is the content: ${content}.`
+    );
     meeting.summary = summary;
     await meeting.save();
     res.status(200).json(meeting);

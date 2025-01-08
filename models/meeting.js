@@ -19,7 +19,7 @@ const meetingSchema = new mongoose.Schema({
   },
   content: {
     type: String,
-    required: true,
+    default: "",
   },
   summary: {
     type: String,
