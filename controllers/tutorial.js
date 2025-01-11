@@ -1,6 +1,6 @@
 import Tutorial from "../models/tutorial.js";
 
-import { generateFinanceCourse } from "../utils/llm.js";
+import { generateFinanceCourse, generateCourseContent } from "../utils/llm.js";
 
 export async function createTutorial(req, res) {
   try {
@@ -29,21 +29,39 @@ export async function createTutorial(req, res) {
 
 export async function generateTutorial(req, res) {
   try {
-    const { email, level, profession, financialGoals } = req.body;
+    const { email, level, profession, financialGoals, language } = req.body;
 
     const tutorial = await Tutorial.findOne({ email: email });
+
+    console.log(tutorial);
+
+    if (tutorial && tutorial[level].length > 0) {
+      return res.status(202).send("Tutorial already exists");
+    }
+
     const result = await generateFinanceCourse(
       level,
       profession,
-      financialGoals
+      financialGoals,
+      language
     );
 
+    const updatedTutorial = [];
+    for (const t in result) {
+      const body = {
+        title: result[t],
+        content: await generateCourseContent(result[t], level, language),
+      };
+      console.log(body);
+      updatedTutorial.push(body);
+    }
+
     if (level === "beginner") {
-      tutorial.beginer = result;
+      tutorial.beginner = updatedTutorial;
     } else if (level === "intermediate") {
-      tutorial.intermediate = result;
+      tutorial.intermediate = updatedTutorial;
     } else {
-      tutorial.advanced = result;
+      tutorial.advanced = updatedTutorial;
     }
 
     await tutorial.save();

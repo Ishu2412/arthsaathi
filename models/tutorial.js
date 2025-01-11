@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const tutorialSchema = mongoose.Schema({
   email: { type: String, required: true },
-  beginer: [],
+  beginner: [],
   intermediate: [],
   advanced: [],
 });

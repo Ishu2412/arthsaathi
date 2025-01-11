@@ -8,6 +8,7 @@ export const createMeeting = async (req, res) => {
       participants = [],
       description,
       content = null,
+      date = Date.now(),
       notes = null,
     } = req.body;
 
@@ -15,6 +16,7 @@ export const createMeeting = async (req, res) => {
       email,
       description,
       participants,
+      date,
       content,
     });
 
@@ -28,7 +30,7 @@ export const createMeeting = async (req, res) => {
 
 export const getSummary = async (req, res) => {
   try {
-    const { email, content } = req.body;
+    const { email, content, language } = req.body;
 
     const meeting = await Meeting.findOne({ email: email });
     if (!meeting) {
@@ -37,7 +39,7 @@ export const getSummary = async (req, res) => {
     meeting.content = content;
     await meeting.save();
 
-    const summary = await groqSummary(content);
+    const summary = await groqSummary(content, language);
     console.log(summary);
     meeting.summary = summary;
     await meeting.save();
