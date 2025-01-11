@@ -57,3 +57,57 @@ export async function groqSummary(text) {
     throw error;
   }
 }
+
+// Tutorial Generation
+const schema2 = {
+  properties: {
+    chapters: {
+      title: "Chapters",
+      type: "array",
+      items: { type: "string" },
+    },
+  },
+  required: ["chapters"],
+  title: "Finance Course Outline",
+  type: "object",
+};
+
+class Course {
+  constructor(chapters) {
+    this.chapters = chapters;
+  }
+}
+
+// Function to generate a course outline based on the user's level
+export async function generateFinanceCourse(level, profession, financialGoals) {
+  const jsonSchema = JSON.stringify(schema2, null, 4);
+
+  try {
+    const chat_completion = await groq.chat.completions.create({
+      messages: [
+        {
+          role: "system",
+          content: `You are an expert course creator specializing in finance. Your task is to create a course outline tailored to the user's level (beginner, intermediate, or advanced). The course should include only the chapter names and follow this JSON schema: ${jsonSchema}`,
+        },
+        {
+          role: "user",
+          content: `Generate a course outline on finance for a ${level}-level user for ${profession} profession for ${financialGoals}. Provide only the chapter names.`,
+        },
+      ],
+      model: "llama-3.3-70b-versatile",
+      temperature: 0,
+      stream: false,
+      response_format: { type: "json_object" },
+    });
+
+    const result = JSON.parse(chat_completion.choices[0].message.content);
+
+    // Extract chapters
+    const { chapters } = result;
+    console.log(chapters);
+    return chapters;
+  } catch (error) {
+    console.error("Error generating course outline:", error.message);
+    throw error;
+  }
+}

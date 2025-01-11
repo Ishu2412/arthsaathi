@@ -51,7 +51,8 @@ export const getSummary = async (req, res) => {
 export const getMeetings = async (req, res) => {
   try {
     const email = req.body.email;
-    return res.status(200).json(await Meeting.findAll({ email: email }));
+    const meetings = await Meeting.find({ email: email });
+    return res.status(200).json(meetings);
   } catch (error) {
     console.error(`Error getting meetings: ${error}`);
     res.status(500).send("Internal server error");
