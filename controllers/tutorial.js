@@ -1,6 +1,6 @@
 import Tutorial from "../models/tutorial.js";
 
-import { llmGenerator } from "../utils/llm.js";
+import { llm } from "../utils/llm.js";
 
 export async function createTutorial(req, res) {
   try {

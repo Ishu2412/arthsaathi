@@ -1,5 +1,5 @@
 import { Meeting } from "../models/meeting.js";
-import { llmGenerator } from "../utils/llm.js";
+import { llm } from "../utils/llm.js";
 
 export const createMeeting = async (req, res) => {
   try {
@@ -36,7 +36,7 @@ export const getSummary = async (req, res) => {
     }
     meeting.content = content;
     await meeting.save();
-    const summary = await llmGenerator(
+    const summary = await llm(
       `A two line summary of the meeting in plain text without using spacial characters. Here is the content: ${content}.`
     );
     meeting.summary = summary;

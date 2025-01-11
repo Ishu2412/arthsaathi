@@ -1,76 +1,71 @@
-import {
-  GoogleGenerativeAI,
-  HarmCategory,
-  HarmBlockThreshold,
-} from "@google/generative-ai";
-import env from "dotenv";
+import Groq from "groq-sdk";
+import dotenv from "dotenv";
 
-env.config();
-if (!process.env.API_KEY) {
+// Load environment variables
+dotenv.config();
+if (!process.env.GROQ_API_KEY) {
   throw new Error(
-    "API_KEY is missing. Please check your environment variables."
+    "GROQ_API_KEY is missing. Please check your environment variables."
   );
 }
 
-const genAI = new GoogleGenerativeAI(process.env.API_KEY);
+// Initialize Groq AI with API key
+const groq = new Groq(process.env.GROQ_API_KEY);
 
-async function llmGenerator(prompt) {
+// Function to generate content (e.g., summarization) based on prompt input
+async function groqGenerator(prompt) {
   try {
-    const model = genAI.getGenerativeModel({
-      model: "gemini-pro",
-      safetySettings: [],
-    });
-
-    const result = await model.generateContent(prompt);
-    return result.response.text();
-  } catch (error) {
-    console.error("Error generating caption:", error.message);
-    throw error;
-  }
-}
-
-async function generateMessage(msg, hist, config = {}) {
-  try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.0-pro" });
-
-    const generationConfig = {
-      temperature: config.temperature || 0.9,
-      topK: config.topK || 1,
-      topP: config.topP || 1,
-      maxOutputTokens: config.maxOutputTokens || 1024,
+    // Define the schema for expected response
+    const schema = {
+      properties: {
+        title: { title: "Title", type: "string" },
+        summary: { title: "Summary", type: "string" },
+      },
+      required: ["title", "summary"],
+      title: "Text Summary",
+      type: "object",
     };
 
-    const safetySettings = [
-      {
-        category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-        threshold: HarmBlockThreshold.BLOCK_NONE,
-      },
-      {
-        category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-        threshold: HarmBlockThreshold.BLOCK_NONE,
-      },
-      {
-        category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-        threshold: HarmBlockThreshold.BLOCK_NONE,
-      },
-      {
-        category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-        threshold: HarmBlockThreshold.BLOCK_NONE,
-      },
-    ];
+    // Serialize schema for use in system message
+    const jsonSchema = JSON.stringify(schema, null, 4);
 
-    const chat = model.startChat({
-      generationConfig,
-      safetySettings,
-      history: hist,
+    // Use Groq's chat completions to generate content based on the prompt
+    const chat_completion = await groq.chat.completions.create({
+      messages: [
+        {
+          role: "system",
+          content: `You are an expert summarization assistant. Your task is to summarize the provided text and return the output in JSON format. The JSON object must follow this schema: ${jsonSchema}`,
+        },
+        {
+          role: "user",
+          content: `Summarize the following text:\n\n${prompt}`,
+        },
+      ],
+      model: "llama-3.3-70b-versatile", // Adjust to your model
+      temperature: 0, // Adjust for creativity vs. accuracy
+      stream: false, // Set to true for streaming
+      response_format: { type: "json_object" },
     });
 
-    const result = await chat.sendMessage(msg);
-    return result.response.text();
+    // Parse the result and return as a structured summary
+    const result = JSON.parse(chat_completion.choices[0].message.content);
+    return result; // Returns the title and summary
   } catch (error) {
-    console.error("Error generating chat message:", error.message);
+    console.error("Error generating summary:", error.message);
     throw error;
   }
 }
 
-export { llmGenerator, generateMessage };
+// Function to print the summary
+function printSummary(summary) {
+  console.log("Title:", summary.title);
+  console.log();
+  console.log("Summary:");
+  console.log(summary.summary);
+}
+
+// Main function
+export async function llm(prompt, schema) {
+  const summary = await groqGenerator(prompt, schema);
+  printSummary(summary);
+}
