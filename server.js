@@ -8,7 +8,7 @@ import __dirname from "./utils/path.js";
 import authRoutes from "./routes/authentication.js";
 import userRoutes from "./routes/profile.js";
 import meetingAssistRoutes from "./routes/meetassist.js";
-import tutorialRoutes from "./routes/tutorial.js";
+// import tutorialRoutes from "./routes/tutorial.js";
 
 const app = express();
 env.config();
@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 app.use(authRoutes);
 app.use(userRoutes);
 app.use(meetingAssistRoutes);
-app.use(tutorialRoutes);
+// app.use(tutorialRoutes);
 
 mongoose
   .connect(

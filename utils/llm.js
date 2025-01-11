@@ -3,33 +3,33 @@ import dotenv from "dotenv";
 
 // Load environment variables
 dotenv.config();
-if (!process.env.GROQ_API_KEY) {
-  throw new Error(
-    "GROQ_API_KEY is missing. Please check your environment variables."
-  );
-}
 
-// Initialize Groq AI with API key
+// Initialize Groq with API key
 const groq = new Groq(process.env.GROQ_API_KEY);
 
-// Function to generate content (e.g., summarization) based on prompt input
-async function groqGenerator(prompt) {
+// Define schema for text summarization
+const schema = {
+  properties: {
+    title: { title: "Title", type: "string" },
+    summary: { title: "Summary", type: "string" },
+  },
+  required: ["title", "summary"],
+  title: "Text Summary",
+  type: "object",
+};
+
+class Summary {
+  constructor(title, summary) {
+    this.title = title;
+    this.summary = summary;
+  }
+}
+
+// Function to get a summary for a given text
+export async function groqSummary(text) {
+  const jsonSchema = JSON.stringify(schema, null, 4);
+
   try {
-    // Define the schema for expected response
-    const schema = {
-      properties: {
-        title: { title: "Title", type: "string" },
-        summary: { title: "Summary", type: "string" },
-      },
-      required: ["title", "summary"],
-      title: "Text Summary",
-      type: "object",
-    };
-
-    // Serialize schema for use in system message
-    const jsonSchema = JSON.stringify(schema, null, 4);
-
-    // Use Groq's chat completions to generate content based on the prompt
     const chat_completion = await groq.chat.completions.create({
       messages: [
         {
@@ -38,34 +38,22 @@ async function groqGenerator(prompt) {
         },
         {
           role: "user",
-          content: `Summarize the following text:\n\n${prompt}`,
+          content: `Summarize the following text:\n\n${text}`,
         },
       ],
-      model: "llama-3.3-70b-versatile", // Adjust to your model
-      temperature: 0, // Adjust for creativity vs. accuracy
-      stream: false, // Set to true for streaming
+      model: "llama-3.3-70b-versatile",
+      temperature: 0,
+      stream: false,
       response_format: { type: "json_object" },
     });
 
-    // Parse the result and return as a structured summary
     const result = JSON.parse(chat_completion.choices[0].message.content);
-    return result; // Returns the title and summary
+
+    // Extract title and summary
+    const { title, summary } = result;
+    return summary;
   } catch (error) {
-    console.error("Error generating summary:", error.message);
+    console.error("Error getting summary:", error.message);
     throw error;
   }
-}
-
-// Function to print the summary
-function printSummary(summary) {
-  console.log("Title:", summary.title);
-  console.log();
-  console.log("Summary:");
-  console.log(summary.summary);
-}
-
-// Main function
-export async function llm(prompt, schema) {
-  const summary = await groqGenerator(prompt, schema);
-  printSummary(summary);
 }
