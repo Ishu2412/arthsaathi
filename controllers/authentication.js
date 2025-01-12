@@ -37,7 +37,7 @@ export const sendOTP = async (req, res) => {
     res.status(200).json({ message: "OTP sent successfully!" });
   } catch (err) {
     console.error(`Error while sending OTP: ${err}`);
-    res.status(500).send("Internal server error");
+    res.status(500).send(`Internal server error: ${err}`);
   }
 };
 
@@ -63,7 +63,7 @@ const verifyOTP = async (email, otp) => {
     return "success";
   } catch (err) {
     console.error(`Error while verifying OTP: ${err}`);
-    return "Internal server error";
+    return `Internal server error: ${err}`;
   }
 };
 
@@ -76,7 +76,7 @@ export const signup = async (req, res) => {
     const ans = await verifyOTP(email, otp);
     if (ans !== "success") {
       if (ans === "Internal server error") {
-        return res.status(500).send("Internal server error");
+        return res.status(500).send(`Internal server error: ${ans}`);
       } else {
         return res.status(400).send(ans);
       }
@@ -90,7 +90,7 @@ export const signup = async (req, res) => {
     bcrypt.hash(password, saltRounds, async (err, hash) => {
       if (err) {
         console.error(`Error while hashing the password: ${err}`);
-        return res.status(500).send("Error while hashing the password");
+        return res.status(500).send(`Error while hashing the password: ${err}`);
       }
 
       const user = {
@@ -103,7 +103,7 @@ export const signup = async (req, res) => {
     });
   } catch (err) {
     console.error(`Error while registering the user: ${err}`);
-    return res.status(500).send("Internal server error");
+    return res.status(500).send(`Internal server error: ${err}`);
   }
 };
 
@@ -118,7 +118,7 @@ export const login = async (req, res) => {
       const storedHashedPassword = user.password;
       bcrypt.compare(data.password, storedHashedPassword, (err, result) => {
         if (err) {
-          res.status(500).send(`Error while Authorizing`);
+          res.status(500).send(`Error while Authorizing: ${err}`);
         } else {
           if (result) {
             res.status(200).send("logined");
@@ -128,9 +128,9 @@ export const login = async (req, res) => {
         }
       });
     } else {
-      res.status(404).send(`User not found`);
+      res.status(404).send("User not found");
     }
   } catch {
-    res.status(500).send(`Internal Server Error`);
+    res.status(500).send(`Internal Server Error: ${err}`);
   }
 };

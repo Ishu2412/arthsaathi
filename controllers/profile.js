@@ -11,7 +11,7 @@ export const getUser = async (req, res) => {
     }
   } catch (err) {
     console.error(`Error while getting user: ${err}`);
-    return res.status(500).send("Internal server error");
+    return res.status(500).send(`Internal server error: ${err}`);
   }
 };
 
@@ -36,6 +36,6 @@ export const updateUser = async (req, res) => {
     }
   } catch (err) {
     console.error(`Error while updating user: ${err}`);
-    return res.status(500).send("Internal server error");
+    return res.status(500).send(`Internal server error: ${err}`);
   }
 };

@@ -23,7 +23,7 @@ export async function createTutorial(req, res) {
     res.status(201).json(tutorial);
   } catch (error) {
     console.error(`Error creating tutorial: ${error}`);
-    res.status(500).send("Internal server error");
+    res.status(500).send(`Internal server error: ${error}`);
   }
 }
 
@@ -69,6 +69,6 @@ export async function generateTutorial(req, res) {
     res.status(200).json(tutorial);
   } catch (error) {
     console.error(`Error generating tutorial: ${error}`);
-    res.status(500).send("Internal server error");
+    res.status(500).send(`Internal server error: ${error}`);
   }
 }

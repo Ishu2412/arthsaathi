@@ -24,7 +24,7 @@ export const createMeeting = async (req, res) => {
     res.status(201).json(meeting);
   } catch (error) {
     console.error(`Error creating meeting: ${error}`);
-    res.status(500).send("Internal server error");
+    res.status(500).send(`Internal server error: ${error}`);
   }
 };
 
@@ -46,7 +46,7 @@ export const getSummary = async (req, res) => {
     res.status(200).json(meeting);
   } catch (error) {
     console.error(`Error getting summary: ${error}`);
-    res.status(500).send("Internal server error");
+    res.status(500).send(`Internal server error: ${error}`);
   }
 };
 
@@ -57,6 +57,6 @@ export const getMeetings = async (req, res) => {
     return res.status(200).json(meetings);
   } catch (error) {
     console.error(`Error getting meetings: ${error}`);
-    res.status(500).send("Internal server error");
+    res.status(500).send(`Internal server error: ${error}`);
   }
 };
