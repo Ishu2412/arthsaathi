@@ -149,7 +149,7 @@ export async function generateCourseContent(name, level, language) {
         },
         {
           role: "user",
-          content: `Generate a course content of 100 words for the topic "${name}" at the ${level} level. Write the content in ${language} and ensure it provides valuable insights and details relevant to the topic.`,
+          content: `Generate a course content of 400 words for the topic "${name}" at the ${level} level. Write the content in ${language} and ensure it provides valuable insights and details relevant to the topic.`,
         },
       ],
       model: "llama-3.3-70b-versatile",
