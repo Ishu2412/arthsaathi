@@ -1,6 +1,6 @@
 import express from "express";
 
-import { generateTutorial, createTutorial } from "../controllers/tutorial.js";
+import { createTutorial, generateTutorial } from "../controllers/tutorial.js";
 
 const router = express.Router();
 

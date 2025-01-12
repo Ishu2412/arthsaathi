@@ -9,7 +9,7 @@ export async function createTutorial(req, res) {
     const check = await Tutorial.findOne({ email: email });
 
     if (check) {
-      return res.status(200).send("Tutorial already exists");
+      return res.status(200).json(check);
     }
 
     const tutorial = new Tutorial({
@@ -33,7 +33,7 @@ export async function generateTutorial(req, res) {
     console.log(tutorial);
 
     if (tutorial && tutorial[level].length > 0) {
-      return res.status(202).send("Tutorial already exists");
+      return res.status(200).json(tutorial);
     }
 
     const result = await generateFinanceCourse(
