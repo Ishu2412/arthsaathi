@@ -19,6 +19,10 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+app.get("/", (req, res) => {
+  res.status(200).send("Welcome to ArthSaathi.");
+});
+
 app.use(authRoutes);
 app.use(userRoutes);
 app.use(meetingAssistRoutes);
