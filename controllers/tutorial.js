@@ -4,7 +4,7 @@ import { generateFinanceCourse, generateCourseContent } from "../utils/llm.js";
 
 export async function createTutorial(req, res) {
   try {
-    const { email, beginer = [], intermediate = [], advanced = [] } = req.body;
+    const { email } = req.body;
 
     const check = await Tutorial.findOne({ email: email });
 
@@ -14,9 +14,6 @@ export async function createTutorial(req, res) {
 
     const tutorial = new Tutorial({
       email,
-      beginer,
-      intermediate,
-      advanced,
     });
 
     await tutorial.save();
