@@ -33,7 +33,7 @@ export async function generateTutorial(req, res) {
     console.log(tutorial);
 
     if (tutorial && tutorial[level].length > 0) {
-      return res.status(200).json(tutorial);
+      return res.status(200).json(tutorial[level]);
     }
 
     const result = await generateFinanceCourse(
