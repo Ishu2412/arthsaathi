@@ -2,6 +2,7 @@ import express from "express";
 
 import {
   createMeeting,
+  getMeeting,
   getMeetings,
   getSummary,
 } from "../controllers/meetassist.js";
@@ -9,7 +10,8 @@ import {
 const router = express.Router();
 
 router.post("/createMeeting", createMeeting);
-router.post("/getSummary", getSummary);
+router.post("/getMeeting", getMeeting);
 router.post("/getMeetings", getMeetings);
+router.post("/getSummary", getSummary);
 
 export default router;
