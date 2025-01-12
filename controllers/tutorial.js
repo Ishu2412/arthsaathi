@@ -63,7 +63,7 @@ export async function generateTutorial(req, res) {
 
     await tutorial.save();
 
-    res.status(200).json(tutorial);
+    res.status(200).json(tutorial[tutorial]);
   } catch (error) {
     console.error(`Error generating tutorial: ${error}`);
     res.status(500).send(`Internal server error: ${error}`);
